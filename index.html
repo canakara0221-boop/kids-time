@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>자식과 함께할 수 있는 시간 ⏰</title>
+<meta property="og:title" content="자식과 함께할 수 있는 '잔인한 시간'" />
+<meta property="og:description" content="아이 생일만 넣으면 — 함께 보낼 주말·여름방학·놀자고 다가올 날이 며칠 남았는지 알려줘요." />
+<meta property="og:type" content="website" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Pretendard:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+  :root{
+    --bg1:#fbeed0; --bg2:#f6dcae; --ink:#4a3421; --muted:#8a6f4e;
+    --accent:#e8623a; --green:#2f8f4e; --card:#fffaf0; --line:#e7cfa3;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+  html,body{min-height:100%;}
+  body{
+    font-family:"Pretendard","Malgun Gothic",sans-serif;color:var(--ink);
+    background:radial-gradient(120% 100% at 50% 0%,var(--bg1),var(--bg2));
+    display:flex;justify-content:center;padding:18px 14px 40px;min-height:100vh;
+  }
+  .wrap{width:100%;max-width:440px;}
+  /* 카드(캡처 대상) */
+  .card{
+    background:linear-gradient(180deg,#fffdf7,#fff6e6);
+    border:3px solid #efd39a;border-radius:26px;padding:26px 22px 24px;
+    box-shadow:0 18px 44px rgba(120,80,30,.22);position:relative;overflow:hidden;
+  }
+  .card::after{content:"";position:absolute;inset:0;border-radius:24px;
+    box-shadow:inset 0 0 0 2px rgba(255,255,255,.6);pointer-events:none;}
+  .kicker{font-size:13px;font-weight:800;color:var(--accent);letter-spacing:.02em;}
+  h1{font-size:26px;font-weight:900;line-height:1.25;margin:6px 0 2px;}
+  h1 .r{color:var(--accent);}
+  .sub{font-size:13.5px;color:var(--muted);font-weight:600;margin-top:8px;line-height:1.6;}
+
+  /* 입력부 */
+  .inbox{margin-top:20px;}
+  label{display:block;font-size:14px;font-weight:800;margin-bottom:8px;}
+  .row{display:flex;gap:8px;}
+  input[type=date]{
+    flex:1;font-family:inherit;font-size:17px;font-weight:700;color:var(--ink);
+    padding:14px 14px;border:2px solid var(--line);border-radius:14px;background:#fffdf7;
+  }
+  .btn{
+    border:none;cursor:pointer;font-family:inherit;font-weight:900;font-size:16px;color:#fff;
+    background:linear-gradient(180deg,#f0743f,#e2551f);padding:14px 18px;border-radius:14px;
+    box-shadow:0 8px 18px rgba(226,85,31,.32);transition:transform .08s;
+  }
+  .btn:active{transform:translateY(1px) scale(.99);}
+  .btn.full{width:100%;margin-top:14px;}
+  .btn.ghost{background:#fff3df;color:var(--accent);box-shadow:none;border:2px solid #f2c79c;}
+  .hint{font-size:12px;color:var(--muted);margin-top:10px;text-align:center;}
+
+  /* 결과부 */
+  #result{display:none;}
+  .hero{text-align:center;margin:16px 0 6px;}
+  .hero .lab{font-size:14px;font-weight:800;color:var(--muted);}
+  .hero .big{font-size:64px;font-weight:900;line-height:1;color:var(--accent);
+    font-variant-numeric:tabular-nums;letter-spacing:-.02em;margin:4px 0;}
+  .hero .unit{font-size:22px;font-weight:900;color:var(--ink);}
+  .hero .note{font-size:13px;color:var(--muted);font-weight:600;margin-top:4px;}
+
+  .stats{display:flex;flex-direction:column;gap:9px;margin-top:16px;}
+  .stat{display:flex;align-items:center;gap:12px;background:#fffaf0;border:2px solid #f0dcb3;
+    border-radius:15px;padding:12px 14px;}
+  .stat .emo{font-size:22px;width:26px;text-align:center;flex:none;}
+  .stat .t{flex:1;font-size:14px;font-weight:700;color:var(--ink);line-height:1.3;}
+  .stat .v{font-size:17px;font-weight:900;color:var(--green);white-space:nowrap;font-variant-numeric:tabular-nums;}
+  .stat.gone .v{color:#b9483a;}
+  .stat.gone .t{color:var(--muted);}
+
+  .bar-wrap{margin-top:18px;background:#fff7e8;border:2px solid #f0dcb3;border-radius:15px;padding:14px;}
+  .bar-lab{font-size:13px;font-weight:700;color:var(--ink);line-height:1.5;}
+  .bar-lab b{color:var(--accent);}
+  .bar{height:14px;border-radius:8px;background:#f0dcb3;overflow:hidden;margin-top:10px;}
+  .bar > i{display:block;height:100%;width:0;border-radius:8px;
+    background:linear-gradient(90deg,#f0743f,#e2551f);transition:width 1.1s cubic-bezier(.2,.7,.2,1);}
+  .bar-sub{font-size:11.5px;color:var(--muted);margin-top:7px;text-align:right;}
+
+  .quote{margin-top:16px;text-align:center;font-family:"Gaegu",cursive;font-size:19px;
+    font-weight:700;color:var(--ink);line-height:1.5;}
+  .brand{margin-top:14px;text-align:center;font-size:11px;color:#b79c74;font-weight:700;letter-spacing:.04em;}
+
+  .actions{display:flex;gap:8px;margin-top:16px;}
+  .actions .btn{flex:1;padding:13px 10px;font-size:14px;}
+
+  .waitlist{margin-top:16px;background:#fffaf0;border:2px dashed #eac489;border-radius:15px;padding:14px;}
+  .waitlist p{font-size:13px;font-weight:700;color:var(--ink);margin-bottom:9px;line-height:1.5;}
+  .waitlist input{width:100%;font-family:inherit;font-size:15px;padding:12px;border:2px solid var(--line);
+    border-radius:12px;background:#fffdf7;font-weight:600;}
+  .waitlist .btn{margin-top:9px;width:100%;}
+  .waitlist .ok{font-size:13px;color:var(--green);font-weight:800;text-align:center;padding:6px 0;display:none;}
+  .foot{font-size:11px;color:#b79c74;text-align:center;margin-top:18px;line-height:1.6;}
+  .err{color:#b9483a;font-size:13px;font-weight:700;margin-top:8px;display:none;}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <!-- ===== 입력 화면 ===== -->
+    <div class="card" id="cardInput">
+      <div class="kicker">⏰ 부모라면 꼭 한번</div>
+      <h1>자식과 함께할 수 있는<br/><span class="r">‘잔인한 시간’</span></h1>
+      <div class="sub">아이 생일만 넣으면 — 함께 보낼 <b>주말·여름방학</b>, “놀자”고 먼저 다가올 날이 <b>며칠 남았는지</b> 계산해줘요.</div>
+      <div class="inbox">
+        <label for="bday">🎂 우리 아이 생일</label>
+        <div class="row">
+          <input type="date" id="bday" />
+        </div>
+        <div class="err" id="err">생일을 올바르게 입력해주세요.</div>
+        <button class="btn full" id="calcBtn">남은 시간 계산하기</button>
+        <div class="hint">계산은 이 기기 안에서만 — 아무 정보도 전송되지 않아요.</div>
+      </div>
+    </div>
+
+    <!-- ===== 결과 화면 ===== -->
+    <div id="result">
+      <div class="card" id="shot">
+        <div class="kicker" id="rKicker">⏰ 우리 아이와 남은 시간</div>
+        <div class="hero">
+          <div class="lab">함께 보낼 수 있는 주말이</div>
+          <div class="big" id="heroNum">0</div>
+          <div class="unit">번 남았어요</div>
+          <div class="note" id="heroNote"></div>
+        </div>
+        <div class="stats" id="stats"></div>
+        <div class="bar-wrap">
+          <div class="bar-lab">자식과 함께하는 시간의 <b>80%</b>는 18세 전에 끝나요.</div>
+          <div class="bar"><i id="barFill"></i></div>
+          <div class="bar-sub" id="barSub"></div>
+        </div>
+        <div class="quote">오늘, 딱 10분만<br/>같이 놀아줄까요? 🧸</div>
+        <div class="brand">남은시간 · 우리 아이와</div>
+      </div>
+
+      <div class="actions">
+        <button class="btn" id="saveBtn">📷 이미지로 저장</button>
+        <button class="btn ghost" id="shareBtn">공유하기</button>
+      </div>
+
+      <div class="waitlist">
+        <p>💌 매주 “이번 주말 남은 횟수”를 알림으로 받아볼래요?</p>
+        <input type="email" id="email" placeholder="이메일 (알림 준비되면 딱 1번 알려드려요)" />
+        <button class="btn" id="waitBtn">알림 신청</button>
+        <div class="ok" id="waitOk">✅ 신청 완료 — 준비되면 알려드릴게요!</div>
+      </div>
+
+      <button class="btn ghost full" id="againBtn" style="margin-top:14px">🔄 다시 계산</button>
+      <div class="foot">근거: “함께하는 시간의 대부분은 12세 전에” (1000 Hours Outside 등 통용 통계)를 개인 생일에 맞춰 계산.<br/>수치는 평균 기반 어림값이에요 — 정확한 예언이 아니라, 오늘을 소중히 하자는 알림 💛</div>
+    </div>
+  </div>
+
+<script>
+  const $ = s => document.querySelector(s);
+  const MS = 86400000;
+
+  function daysUntilAge(b, age){
+    const t = new Date(b.getFullYear()+age, b.getMonth(), b.getDate());
+    return Math.ceil((t - new Date()) / MS);
+  }
+  function fmt(n){ return n.toLocaleString('ko-KR'); }
+
+  function calc(){
+    const val = $('#bday').value;
+    if(!val){ showErr(); return; }
+    const b = new Date(val + 'T00:00:00');
+    const now = new Date();
+    if(isNaN(b) || b > now){ showErr(); return; }
+    $('#err').style.display='none';
+
+    const ageYears = (now - b) / (365.25*MS);
+    const daysTo18 = daysUntilAge(b, 18);
+    const weekends = Math.max(0, Math.round(daysTo18/7));
+    const summers  = Math.max(0, 18 - Math.floor(ageYears));
+    const play     = daysUntilAge(b, 10);  // "놀자"고 먼저 다가오는
+    const hand     = daysUntilAge(b, 9);   // 손잡고 걷기
+    const sleep    = daysUntilAge(b, 10);  // 품에서 잠들기
+    const words    = daysUntilAge(b, 13);  // 말이 먹히는 시기(~12세)
+    const pct      = Math.min(100, Math.max(0, ageYears/18*100));
+
+    // 이미 다 큰 경우
+    if(ageYears >= 18){
+      $('#rKicker').textContent = '🌳 이미 훌쩍 컸네요';
+    } else {
+      $('#rKicker').textContent = '⏰ 우리 아이와 남은 시간';
+    }
+
+    $('#heroNum').textContent = fmt(weekends);
+    $('#heroNote').textContent = ageYears >= 18
+      ? '18세가 지났어요 — 이제는 “어른 대 어른”의 시간 💛'
+      : `18세까지 약 ${fmt(daysTo18)}일 (${fmt(Math.round(daysTo18/30))}달)`;
+
+    const rows = [
+      ['🏖️','함께 보낼 여름방학', summers, '번', summers<=0],
+      ['🧸','“놀자”고 먼저 다가올 날', play, '일', play<=0],
+      ['🤝','손잡고 걸어줄 수 있는 날', hand, '일', hand<=0],
+      ['💤','품에서 함께 잠들 수 있는 날', sleep, '일', sleep<=0],
+      ['🗣️','부모 말이 통하는 시기', words, '일', words<=0],
+    ];
+    $('#stats').innerHTML = rows.map(([e,t,v,u,gone]) =>
+      `<div class="stat${gone?' gone':''}"><span class="emo">${e}</span>`
+      + `<span class="t">${t}</span>`
+      + `<span class="v">${gone?'이미 지났어요 💔':(fmt(v)+u+' 남음')}</span></div>`
+    ).join('');
+
+    $('#barSub').textContent = `지금까지 ${pct.toFixed(0)}% 지나왔어요`;
+    // 화면 전환
+    $('#cardInput').style.display='none';
+    $('#result').style.display='block';
+    window.scrollTo({top:0,behavior:'smooth'});
+    setTimeout(()=>{ $('#barFill').style.width = pct.toFixed(1)+'%'; }, 120);
+  }
+
+  function showErr(){ $('#err').style.display='block'; }
+
+  $('#calcBtn').addEventListener('click', calc);
+  $('#bday').addEventListener('keydown', e => { if(e.key==='Enter') calc(); });
+
+  $('#againBtn').addEventListener('click', ()=>{
+    $('#result').style.display='none';
+    $('#cardInput').style.display='block';
+    $('#barFill').style.width='0';
+    window.scrollTo({top:0,behavior:'smooth'});
+  });
+
+  // 이미지 저장 (html2canvas)
+  $('#saveBtn').addEventListener('click', async ()=>{
+    try{
+      const canvas = await html2canvas($('#shot'), {scale:2, backgroundColor:null, useCORS:true});
+      const link = document.createElement('a');
+      link.download = '우리아이와_남은시간.png';
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    }catch(e){ alert('저장에 실패했어요. 스크린샷으로 공유해 주세요 🙏'); }
+  });
+
+  // 공유 (Web Share API → 폴백 링크복사)
+  $('#shareBtn').addEventListener('click', async ()=>{
+    const shareData = {
+      title:'자식과 함께할 수 있는 잔인한 시간',
+      text:'우리 아이와 함께 보낼 주말이 몇 번 남았을까? 생일만 넣어봐요 ⏰',
+      url:location.href
+    };
+    try{
+      if(navigator.share){ await navigator.share(shareData); }
+      else{ await navigator.clipboard.writeText(location.href); alert('링크를 복사했어요 — 붙여넣기해서 공유하세요!'); }
+    }catch(e){}
+  });
+
+  // 대기자(MVP: 로컬 저장만 — 백엔드/Formspree 연결 전까지는 수집 안 됨)
+  $('#waitBtn').addEventListener('click', ()=>{
+    const em = $('#email').value.trim();
+    if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)){ alert('이메일을 확인해주세요.'); return; }
+    // TODO: 여기에 Formspree/Google Form/백엔드 endpoint 연결해서 실제 수집
+    try{ const a=JSON.parse(localStorage.getItem('waitlist')||'[]'); a.push({em,at:Date.now()}); localStorage.setItem('waitlist',JSON.stringify(a)); }catch(e){}
+    $('#waitBtn').style.display='none'; $('#email').style.display='none'; $('#waitOk').style.display='block';
+  });
+</script>
+</body>
+</html>
