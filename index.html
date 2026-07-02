@@ -155,6 +155,10 @@
 <script>
   const $ = s => document.querySelector(s);
   const MS = 86400000;
+  // ▼ 알림 대기자 수집 endpoint — 구글 Apps Script 웹앱 URL을 붙여넣으면 실제 수집됩니다.
+  //   (apps-script/SETUP.md 참고. 비어있으면 브라우저 localStorage에만 임시 저장)
+  const WAITLIST_ENDPOINT = "";  // 예: "https://script.google.com/macros/s/AKfy..../exec"
+  let currentBday = "";
 
   function daysUntilAge(b, age){
     const t = new Date(b.getFullYear()+age, b.getMonth(), b.getDate());
@@ -169,6 +173,7 @@
     const now = new Date();
     if(isNaN(b) || b > now){ showErr(); return; }
     $('#err').style.display='none';
+    currentBday = val;
 
     const ageYears = (now - b) / (365.25*MS);
     const daysTo18 = daysUntilAge(b, 18);
@@ -250,11 +255,19 @@
   });
 
   // 대기자(MVP: 로컬 저장만 — 백엔드/Formspree 연결 전까지는 수집 안 됨)
-  $('#waitBtn').addEventListener('click', ()=>{
+  $('#waitBtn').addEventListener('click', async ()=>{
     const em = $('#email').value.trim();
     if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)){ alert('이메일을 확인해주세요.'); return; }
-    // TODO: 여기에 Formspree/Google Form/백엔드 endpoint 연결해서 실제 수집
-    try{ const a=JSON.parse(localStorage.getItem('waitlist')||'[]'); a.push({em,at:Date.now()}); localStorage.setItem('waitlist',JSON.stringify(a)); }catch(e){}
+    const payload = { email: em, birthday: currentBday, at: new Date().toISOString() };
+    try{
+      if(WAITLIST_ENDPOINT){
+        // Apps Script 웹앱으로 전송 (no-cors + text/plain = preflight 회피, doPost가 postData로 수신)
+        await fetch(WAITLIST_ENDPOINT, {method:'POST', mode:'no-cors',
+          headers:{'Content-Type':'text/plain;charset=utf-8'}, body: JSON.stringify(payload)});
+      } else {
+        const a=JSON.parse(localStorage.getItem('waitlist')||'[]'); a.push(payload); localStorage.setItem('waitlist',JSON.stringify(a));
+      }
+    }catch(e){}
     $('#waitBtn').style.display='none'; $('#email').style.display='none'; $('#waitOk').style.display='block';
   });
 </script>
