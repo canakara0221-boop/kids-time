@@ -1,6 +1,19 @@
 import { useState } from 'react';
+import { share, getTossShareLink } from '@apps-in-toss/web-framework';
 
 const MS = 86400000;
+
+// 앱인토스 공유 브릿지 — 토스 앱 안에서만 동작(브라우저 미리보기선 조용히 무시).
+async function shareResult(summers: number) {
+  const base =
+    `우리 아이와 함께할 여름방학이 ${summers.toLocaleString('ko-KR')}번 남았대요 ⏰\n` +
+    `너희 아이는 며칠 남았어? 생일만 넣으면 1초에 나와요.`;
+  try {
+    let link = '';
+    try { link = await getTossShareLink('/'); } catch { /* 링크 미지원 시 텍스트만 */ }
+    await share({ message: link ? `${base}\n${link}` : base });
+  } catch { /* 사용자 취소 / 브릿지 없음 */ }
+}
 
 function daysUntilAge(b: Date, age: number): number {
   const t = new Date(b.getFullYear() + age, b.getMonth(), b.getDate());
@@ -122,6 +135,7 @@ export default function App() {
         </div>
       </div>
 
+      <button className="btn mt" onClick={() => shareResult(res.summers)}>💌 친구에게 공유하기</button>
       <button className="btn ghost mt" onClick={() => { setRes(null); setBday(''); }}>🔄 다시 계산</button>
     </div>
   );

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>앱 아이콘 — 우리 아이와 남은 시간</title>
+<style>
+  body{margin:0;background:#eef4f9;font-family:"Pretendard","Malgun Gothic",sans-serif;
+    display:flex;flex-direction:column;align-items:center;gap:18px;padding:28px;color:#23425e;}
+  #box{width:300px;height:300px;border-radius:64px;overflow:hidden;box-shadow:0 20px 44px rgba(50,120,190,.35);}
+  #box svg{display:block;width:100%;height:100%;}
+  button{border:none;background:linear-gradient(180deg,#51AEEC,#2f8fce);color:#fff;font-weight:900;
+    font-size:15px;padding:13px 22px;border-radius:12px;cursor:pointer;box-shadow:0 8px 18px rgba(47,143,206,.35);}
+  .cap{font-size:13px;color:#6a8199;font-weight:700;text-align:center;line-height:1.6;}
+</style>
+</head>
+<body>
+  <div id="box"></div>
+  <button id="dl">📥 1024×1024 PNG 저장</button>
+  <div class="cap">onnydesign 조합 B(스카이블루·핑크) · 시계+하트 = 시간+가족<br/>이 PNG를 앱인토스 콘솔 아이콘으로 업로드하세요.</div>
+<script>
+  const S = 1024, C = S/2, cy = 540, R = 300;
+  // 12 눈금
+  let ticks = '';
+  for (let i=0;i<12;i++){
+    const a = (i/12)*Math.PI*2 - Math.PI/2;
+    const r1 = R-30, r2 = R-58, big = (i%3===0);
+    const x1 = C+Math.cos(a)*r1, y1 = cy+Math.sin(a)*r1;
+    const x2 = C+Math.cos(a)*r2, y2 = cy+Math.sin(a)*r2;
+    ticks += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#9fc9e8" stroke-width="${big?18:9}" stroke-linecap="round"/>`;
+  }
+  const heart = `M${C},${cy+34} c -34,-46 -96,-30 -96,18 c 0,42 60,70 96,104 c 36,-34 96,-62 96,-104 c 0,-48 -62,-64 -96,-18 z`;
+  const svg = `
+  <svg viewBox="0 0 ${S} ${S}" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#6fc2f3"/><stop offset="1" stop-color="#2f8fce"/>
+      </linearGradient>
+      <linearGradient id="hand" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#3a6f9e"/><stop offset="1" stop-color="#23425e"/>
+      </linearGradient>
+    </defs>
+    <rect width="${S}" height="${S}" fill="url(#bg)"/>
+    <circle cx="812" cy="196" r="150" fill="#FFC0DF" opacity="0.34"/>
+    <circle cx="210" cy="300" r="96" fill="#ffffff" opacity="0.12"/>
+    <circle cx="${C}" cy="${cy}" r="${R}" fill="#F8FBFF" stroke="#dcefff" stroke-width="10"/>
+    ${ticks}
+    <line x1="${C}" y1="${cy}" x2="${C}" y2="${cy-176}" stroke="url(#hand)" stroke-width="34" stroke-linecap="round"/>
+    <line x1="${C}" y1="${cy}" x2="${C+150}" y2="${cy+30}" stroke="url(#hand)" stroke-width="34" stroke-linecap="round"/>
+    <path d="${heart}" fill="#ff7fb6"/>
+    <path d="${heart}" fill="none" stroke="#ffffff" stroke-width="10" opacity="0.5"/>
+  </svg>`;
+  document.getElementById('box').innerHTML = svg;
+
+  document.getElementById('dl').addEventListener('click', () => {
+    const src = document.querySelector('#box svg').outerHTML;
+    const blob = new Blob([src], {type:'image/svg+xml'});
+    const url = URL.createObjectURL(blob);
+    const img = new Image();
+    img.onload = () => {
+      const cv = document.createElement('canvas'); cv.width = S; cv.height = S;
+      cv.getContext('2d').drawImage(img, 0, 0, S, S);
+      URL.revokeObjectURL(url);
+      const a = document.createElement('a');
+      a.download = 'kids-time-icon-1024.png';
+      a.href = cv.toDataURL('image/png'); a.click();
+    };
+    img.src = url;
+  });
+</script>
+</body>
+</html>
