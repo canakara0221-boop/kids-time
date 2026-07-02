@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>커버 이미지 — 조합 B</title>
+<link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@700&family=Pretendard:wght@500;700;800;900&display=swap" rel="stylesheet" />
+<style>
+  /* onnydesign '조합 B' 키즈·웰니스: 스카이블루 #51AEEC / 화이트 #F8FBFF / 핑크 #FFC0DF */
+  :root{ --sky:#51AEEC; --sky-d:#2f8fce; --white:#F8FBFF; --pink:#FFC0DF; --ink:#23425e; --muted:#6a8199; }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:#eef4f9;display:flex;justify-content:center;padding:16px;font-family:"Pretendard",sans-serif;}
+  /* 9:16 커버 카드 (스크린샷용) */
+  .cover{
+    width:360px;height:640px;border-radius:30px;overflow:hidden;position:relative;
+    background:radial-gradient(120% 80% at 50% 0%, #ffffff 0%, #eaf6ff 55%, #d8eefc 100%);
+    box-shadow:0 24px 60px rgba(40,90,140,.28);color:var(--ink);
+    display:flex;flex-direction:column;
+  }
+  /* 상단 파스텔 블롭 장식 */
+  .blob{position:absolute;border-radius:50%;filter:blur(2px);opacity:.55;}
+  .b1{width:150px;height:150px;background:var(--pink);top:-40px;right:-30px;}
+  .b2{width:120px;height:120px;background:var(--sky);top:60px;left:-40px;opacity:.35;}
+  .inner{position:relative;z-index:2;padding:34px 28px 26px;display:flex;flex-direction:column;height:100%;}
+  .kicker{font-size:13px;font-weight:800;color:var(--sky-d);letter-spacing:.02em;}
+  h1{font-size:33px;font-weight:900;line-height:1.24;margin-top:10px;letter-spacing:-.02em;}
+  .mark{background:linear-gradient(180deg,transparent 55%, var(--pink) 55%);padding:0 4px;border-radius:4px;}
+  .clock{font-size:30px;}
+  .sub{font-size:14px;font-weight:700;color:var(--muted);margin-top:14px;line-height:1.55;}
+  .sub b{color:var(--sky-d);}
+  /* 티저 칩 */
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px;}
+  .chip{background:#fff;border:2px solid #d6ebfb;border-radius:12px;padding:9px 12px;font-size:13px;font-weight:800;
+    box-shadow:0 6px 14px rgba(80,150,220,.14);}
+  .chip .n{color:var(--sky-d);} .chip.pink{border-color:#ffd6ec;background:#fff5fb;} .chip.pink .n{color:#e86aa6;}
+  .spacer{flex:1;}
+  /* 하단 CTA 밴드 */
+  .cta{background:linear-gradient(180deg,var(--sky),var(--sky-d));border-radius:20px;padding:18px 18px 16px;
+    color:#fff;box-shadow:0 12px 26px rgba(47,143,206,.4);}
+  .cta .q{font-size:18px;font-weight:900;}
+  .cta .l{font-size:13px;font-weight:700;opacity:.95;margin-top:5px;}
+  .cta .pill{display:inline-block;margin-top:11px;background:#fff;color:var(--sky-d);font-weight:900;font-size:13px;
+    padding:8px 14px;border-radius:999px;}
+  .foot{text-align:center;font-size:11px;color:var(--muted);font-weight:700;margin-top:14px;}
+  .kids{position:absolute;bottom:120px;right:20px;font-size:44px;z-index:1;filter:drop-shadow(0 6px 8px rgba(0,0,0,.12));}
+</style>
+</head>
+<body>
+  <div class="cover" id="cover">
+    <div class="blob b1"></div><div class="blob b2"></div>
+    <div class="kids">🧸</div>
+    <div class="inner">
+      <div class="kicker">👶 부모라면 꼭 한번</div>
+      <h1>자식과 함께할 수&nbsp;있는<br/><span class="mark">잔인한 시간</span> <span class="clock">⏰</span></h1>
+      <div class="sub">아이 생일만 넣으면 — 함께 보낼 <b>주말·여름방학</b>이<br/>며칠 남았는지 <b>1초</b>에 알려줘요.</div>
+      <div class="chips">
+        <div class="chip">🏖️ 함께할 여름방학 <span class="n">12번</span></div>
+        <div class="chip pink">🧸 “놀자” 유통기한 <span class="n">10년</span></div>
+        <div class="chip">🤝 손잡고 걷기 <span class="n">9세까지</span></div>
+      </div>
+      <div class="spacer"></div>
+      <div class="cta">
+        <div class="q">너희 아이는 며칠 남았어?</div>
+        <div class="l">생일만 넣으면 남은 주말이 나와요.</div>
+        <div class="pill">프로필 링크에서 계산 👆</div>
+      </div>
+      <div class="foot">우리 아이와 남은 시간 · @your_account</div>
+    </div>
+  </div>
+</body>
+</html>
